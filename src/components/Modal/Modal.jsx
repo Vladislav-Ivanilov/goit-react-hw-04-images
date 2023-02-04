@@ -5,24 +5,26 @@ import { Overlay, ModalBlock, ModalImg } from './Modal.styeld';
 const modalRoot = document.getElementById('modal');
 
 export const Modal = ({ closeModal, tags, modalImg }) => {
-  useEffect(() => {
-    const closeByClick = element => {
-      if (element.code !== 'Escape') {
-        return;
-      }
-
+  const closeKeyDown = element => {
+    if (element.code === 'Escape') {
       closeModal();
-    };
+    }
+  };
 
-    window.addEventListener('keydown', closeByClick);
+  const handelClick = event => {
+    if (event.currentTarget === event.target) closeModal();
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', closeKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', closeByClick);
+      window.removeEventListener('keydown', closeKeyDown);
     };
-  }, [closeModal]);
+  });
 
   return createPortal(
-    <Overlay onClick={closeModal}>
+    <Overlay onClick={handelClick}>
       <ModalBlock>
         <ModalImg src={modalImg} alt={tags} />
       </ModalBlock>
